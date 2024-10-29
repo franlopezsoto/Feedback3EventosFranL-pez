@@ -1,9 +1,11 @@
 package com.example.feedback3eventosfranlopez;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
@@ -38,16 +40,32 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addNovela(Novela novela) {
-        // Código para añadir novela
-    }
-
     public List<Novela> getAllNovelas() {
-        // Código para obtener todas las novelas
-        return java.util.Collections.emptyList();
+        List<Novela> novelas = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Novela novela = new Novela(
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITLE)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR)),
+                        cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REVIEW)),
+                        cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_FAVORITE)) == 1
+                );
+                novelas.add(novela);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return novelas;
     }
 
-
-
-    // Métodos adicionales para actualizar y eliminar novelas
+    public void updateNovela(Novela novela) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_FAVORITE, novela.isFavorito() ? 1 : 0);
+        db.update(TABLE_NAME, values, COLUMN_ID + " = ?", new String[]{String.valueOf(novela.getId())});
+    }
 }
+

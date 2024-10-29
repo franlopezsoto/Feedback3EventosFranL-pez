@@ -1,47 +1,26 @@
 package com.example.feedback3eventosfranlopez
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.feedback3eventosfranlopez.ui.theme.Feedback3EventosFranLopezTheme
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: NovelaAdapter
+    private lateinit var dbHelper: SQLiteHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            Feedback3EventosFranLopezTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
-    }
-}
+        setContentView(R.layout.activity_main)
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+        dbHelper = SQLiteHelper(this)
+        recyclerView = findViewById(R.id.recyclerViewNovelas)
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Feedback3EventosFranLopezTheme {
-        Greeting("Android")
+        // Cargar y mostrar las novelas
+        val novelas = dbHelper.getAllNovelas()
+        adapter = NovelaAdapter(novelas, this)
+        recyclerView.adapter = adapter
     }
 }

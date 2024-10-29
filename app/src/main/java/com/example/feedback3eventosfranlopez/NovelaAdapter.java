@@ -6,18 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
 public class NovelaAdapter extends RecyclerView.Adapter<NovelaAdapter.NovelaViewHolder> {
     private List<Novela> novelas;
     private Context context;
+    private SQLiteHelper dbHelper;
 
     public NovelaAdapter(List<Novela> novelas, Context context) {
         this.novelas = novelas;
         this.context = context;
+        this.dbHelper = new SQLiteHelper(context);
     }
 
     @Override
@@ -50,8 +50,11 @@ public class NovelaAdapter extends RecyclerView.Adapter<NovelaAdapter.NovelaView
         public void bind(Novela novela) {
             titulo.setText(novela.getTitulo());
             favorito.setImageResource(novela.isFavorito() ? R.drawable.ic_star_filled : R.drawable.ic_star_empty);
+
             favorito.setOnClickListener(v -> {
-                // Lógica para cambiar estado de favorito
+                novela.setFavorito(!novela.isFavorito());
+                dbHelper.updateNovela(novela);
+                notifyItemChanged(getAdapterPosition());
             });
         }
     }
