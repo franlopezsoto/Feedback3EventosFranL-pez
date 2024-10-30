@@ -1,10 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <!-- Base application theme -->
-    <style name="Theme.Feedback3EventosFranLopez" parent="Theme.AppCompat.Light">
-        <!-- Personaliza los colores de tu tema aquí -->
+    <!-- Tema claro (AppTheme) -->
+    <style name="Theme.Feedback3EventosFranLopez" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryDark">@color/purple_700</item>
         <item name="colorAccent">@color/teal_200</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <!-- Tema oscuro (DarkTheme) -->
+    <style name="DarkTheme" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorAccent">@color/white</item>
+        <item name="android:windowBackground">@color/black</item>
     </style>
 </resources>

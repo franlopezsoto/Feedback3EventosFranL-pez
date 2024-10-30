@@ -4,21 +4,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageSwitcher;
-import android.widget.ImageView;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
 public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHolder> {
     private List<Novel> novels;
     private Context context;
 
-    public NovelAdapter(List<Novel> novels, Context context) {
-        this.novels = novels;
+    public NovelAdapter(Context context, List<Novel> novels) {
         this.context = context;
+        this.novels = novels;
     }
 
     @NonNull
@@ -31,37 +27,25 @@ public class NovelAdapter extends RecyclerView.Adapter<NovelAdapter.NovelViewHol
     @Override
     public void onBindViewHolder(@NonNull NovelViewHolder holder, int position) {
         Novel novel = novels.get(position);
-        holder.titleTextView.setText(novel.getTitle());
-        holder.authorTextView.setText(novel.getAuthor());
-
-        // Cambia el ícono de la estrella dependiendo de si es favorito o no
-        holder.favoriteIcon.setImageResource(
-                novel.isFavorite() ? R.drawable.ic_star_filled : R.drawable.ic_star_empty
-        );
-
-        // Cambia el estado de favorito al hacer clic en la estrella
-        holder.favoriteIcon.setOnClickListener(v -> {
-            novel.setFavorite(!novel.isFavorite());
-            notifyItemChanged(position);
-        });
+        // Aquí puedes hacer binding de los datos de la novela a las vistas del ViewHolder
     }
-
 
     @Override
     public int getItemCount() {
-        return novels.size();
+        return novels != null ? novels.size() : 0;
     }
 
+    public void setNovels(List<Novel> novels) {
+        this.novels = novels;
+        notifyDataSetChanged();
+    }
 
     static class NovelViewHolder extends RecyclerView.ViewHolder {
-        public ImageSwitcher favoriteIcon;
-        TextView titleTextView;
-        TextView authorTextView;
+        // Define las vistas de item_novel.xml aquí
 
-        NovelViewHolder(View itemView) {
+        public NovelViewHolder(@NonNull View itemView) {
             super(itemView);
-            titleTextView = itemView.findViewById(R.id.titleTextView);
-            authorTextView = itemView.findViewById(R.id.authorTextView);
+            // Inicializa las vistas
         }
     }
 }
